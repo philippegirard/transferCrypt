@@ -1,25 +1,26 @@
 import {useContext} from "react";
 import {AlchemyContext} from "./AlchemyContext";
-import { encodeFunctionData } from "viem";
+import {encodeFunctionData} from "viem";
+
+
 
 export const DashboardPage = () => {
 
-    const { signer, user, account} = useContext(AlchemyContext);
+    const {signer, user, account} = useContext(AlchemyContext);
 
     console.log("signer", signer)
     console.log("user", user)
     console.log("account", account)
 
-    async function logout () {
+    async function logout() {
         await signer.disconnect()
         window.location.href = "/"
     }
 
-    async function sendMoney () {
-        /*
+    async function sendMoney() {
         const AlchemyTokenAbi = [
             {
-                inputs: [{ internalType: "address", name: "recipient", type: "address" }],
+                inputs: [{internalType: "address", name: "recipient", type: "address"}],
                 name: "mint",
                 outputs: [],
                 stateMutability: "nonpayable",
@@ -33,10 +34,15 @@ export const DashboardPage = () => {
             args: [account.getAddress()],
         });
 
-         */
 
+        const uo = await account.sendUserOperation({
+            uo: {
+                target: "0xcCba31057D456e37cae60f4B7DFBfDb8e49e562d",
+                data: uoCallData,
+            },
+        });
 
-
+        /*
         const uo = await account.sendUserOperation({
             uo: {
                 target: "0xcCba31057D456e37cae60f4B7DFBfDb8e49e562d",
@@ -44,6 +50,8 @@ export const DashboardPage = () => {
                 data:""
             },
         });
+
+         */
 
         const txHash = await account.waitForUserOperationTransaction(uo);
 
@@ -62,8 +70,14 @@ export const DashboardPage = () => {
                 <ul>
                     <li>Account.Address: {account?.account.address}</li>
                 </ul>
-                <button onClick={() =>{logout()}}>Logout</button>
-                <button onClick={() => {sendMoney()}}>Send Money</button>
+                <button onClick={() => {
+                    logout()
+                }}>Logout
+                </button>
+                <button onClick={() => {
+                    sendMoney()
+                }}>Send Money
+                </button>
             </div>
         </>
     );
